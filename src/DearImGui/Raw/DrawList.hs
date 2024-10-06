@@ -239,6 +239,18 @@ addLine (DrawList drawList) p1 p2 col thickness = liftIO do
     }
   |]
 
+addLine' :: MonadIO m => DrawList -> ImVec2 -> ImVec2 -> ImU32 -> CFloat -> m ()
+addLine' (DrawList drawList) p1 p2 col thickness = liftIO do
+  [C.block|
+    void {
+      $(ImDrawList* drawList)->AddLine(
+        $(ImVec2 p1),
+        $(ImVec2 p2),
+        $(ImU32 col),
+        $(float thickness)
+      );
+    }
+  |]
 
 addRect :: MonadIO m => DrawList -> Ptr ImVec2 -> Ptr ImVec2 -> ImU32 -> CFloat -> ImDrawFlags -> CFloat -> m ()
 addRect (DrawList drawList) p_min p_max col rounding flags thickness = liftIO do
