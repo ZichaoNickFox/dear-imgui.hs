@@ -2199,9 +2199,9 @@ beginDisabled = Raw.beginDisabled . bool 0 1
 -- | Returns 'True' if the popup is open, and you can start outputting to it.
 --
 -- Wraps @ImGui::BeginPopup()@
-beginPopup :: MonadIO m => Text -> m Bool
-beginPopup popupId = liftIO do
-  Text.withCString popupId Raw.beginPopup
+beginPopup :: MonadIO m => Text -> ImGuiWindowFlags -> m Bool
+beginPopup popupId flags = liftIO do
+  Text.withCString popupId $ \idPtr -> Raw.beginPopup idPtr flags
 
 -- | Append items to a non-modal Popup.
 --
@@ -2211,8 +2211,8 @@ beginPopup popupId = liftIO do
 -- Visibility state is held internally instead of being held by the programmer.
 --
 -- The action will get 'True' if the popup is open.
-withPopup :: MonadUnliftIO m => Text -> (Bool -> m a) -> m a
-withPopup popupId = bracket (beginPopup popupId) (`when` Raw.endPopup)
+withPopup :: MonadUnliftIO m => Text -> ImGuiWindowFlags -> (Bool -> m a) -> m a
+withPopup popupId flags = bracket (beginPopup popupId flags) (`when` Raw.endPopup)
 
 -- | Append items to a non-modal Popup.
 --
@@ -2222,9 +2222,9 @@ withPopup popupId = bracket (beginPopup popupId) (`when` Raw.endPopup)
 -- Visibility state is held internally instead of being held by the programmer.
 --
 -- The action will be called only if the popup is open.
-withPopupOpen :: MonadUnliftIO m => Text -> m () -> m ()
-withPopupOpen popupId action =
-  withPopup popupId (`when` action)
+withPopupOpen :: MonadUnliftIO m => Text -> ImGuiWindowFlags -> m () -> m ()
+withPopupOpen popupId flags action =
+  withPopup popupId flags (`when` action)
 
 -- | Returns 'True' if the modal is open, and you can start outputting to it.
 --

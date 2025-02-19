@@ -102,7 +102,7 @@ loop window checked color slider r pos size' selected tab1Ref tab2Ref = do
     text "Tooltip?"
     endTooltip
 
-  beginPopup "Button Popup" >>= whenTrue do
+  beginPopup "Button Popup" ImGuiWindowFlags_None >>= whenTrue do
     button "Close" >>= whenTrue closeCurrentPopup
     endPopup
 

@@ -1713,9 +1713,9 @@ setItemTooltip textPtr = liftIO do
 -- | Returns 'True' if the popup is open, and you can start outputting to it.
 --
 -- Wraps @ImGui::BeginPopup()@
-beginPopup :: (MonadIO m) => CString -> m Bool
-beginPopup popupIdPtr = liftIO do
-  (0 /=) <$> [C.exp| bool { BeginPopup($(char* popupIdPtr)) } |]
+beginPopup :: (MonadIO m) => CString -> ImGuiWindowFlags -> m Bool
+beginPopup popupIdPtr flags = liftIO do
+  (0 /=) <$> [C.exp| bool { BeginPopup($(char* popupIdPtr), $(ImGuiWindowFlags flags)) } |]
 
 
 -- | Returns 'True' if the modal is open, and you can start outputting to it.
